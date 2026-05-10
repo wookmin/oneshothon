@@ -1,10 +1,10 @@
-import './style.css'
+import "./style.css";
 
-import scanImg from '../assets/영수증 스캔하기.png'
-import tripImg from '../assets/나의 여행 목록 페이지.png'
-import statsImg from '../assets/통계 페이지 (상세보기 및 바 그래프 적용).png'
+import scanImg from "../assets/영수증 스캔하기.png";
+import tripImg from "../assets/나의 여행 목록 페이지.png";
+import statsImg from "../assets/통계 페이지 (상세보기 및 바 그래프 적용).png";
 
-document.getElementById('app').innerHTML = `
+document.getElementById("app").innerHTML = `
   <nav class="nav">
     <div class="nav-inner">
       <a href="/" class="logo">oneshot</a>
@@ -68,54 +68,52 @@ document.getElementById('app').innerHTML = `
   <section class="cta-section" id="pre-register">
     <div class="cta-inner animate-in">
       <h2>지금 신청하고 가장 먼저 만나보세요</h2>
-      <p class="cta-desc">출시 알림과 얼리어답터 혜택을 이메일로 받아보세요.</p>
-      <form class="cta-form" id="cta-form">
-        <input type="email" placeholder="이메일 주소를 입력해주세요" required />
-        <button type="submit">신청하기</button>
-      </form>
+      <p class="cta-desc">출시되면 가장 먼저 알려드릴게요.</p>
+      <button class="btn-cta" id="cta-btn">사전 신청하기 →</button>
     </div>
   </section>
+
+  <div class="toast" id="toast">곧 출시 예정이에요! 기대해주세요</div>
 
   <footer class="footer">
     <div class="footer-inner">
       <span class="logo">oneshot</span>
-      <p>© 2024 oneshot. All rights reserved.</p>
+      <p>© 2026 oneshot. All rights reserved.</p>
     </div>
   </footer>
-`
+`;
 
 const observer = new IntersectionObserver(
   (entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
-        entry.target.classList.add('visible')
-        observer.unobserve(entry.target)
+        entry.target.classList.add("visible");
+        observer.unobserve(entry.target);
       }
-    })
+    });
   },
-  { threshold: 0.12 }
-)
+  { threshold: 0.12 },
+);
 
-document.querySelectorAll('.animate-in').forEach((el) => observer.observe(el))
+document.querySelectorAll(".animate-in").forEach((el) => observer.observe(el));
 
 function trackEvent(name, params = {}) {
-  if (typeof window.gtag === 'function') {
-    window.gtag('event', name, params)
+  if (typeof window.gtag === "function") {
+    window.gtag("event", name, params);
   }
 }
 
-document.querySelector('.btn-nav').addEventListener('click', () => {
-  trackEvent('cta_click', { button_location: 'nav' })
-})
+document.querySelector(".btn-nav").addEventListener("click", () => {
+  trackEvent("cta_click", { button_location: "nav" });
+});
 
-document.querySelector('.btn-primary').addEventListener('click', () => {
-  trackEvent('cta_click', { button_location: 'hero' })
-})
+document.querySelector(".btn-primary").addEventListener("click", () => {
+  trackEvent("cta_click", { button_location: "hero" });
+});
 
-document.getElementById('cta-form').addEventListener('submit', (e) => {
-  e.preventDefault()
-  const input = e.target.querySelector('input')
-  trackEvent('generate_lead', { method: 'email' })
-  alert(`${input.value} 으로 사전 신청이 완료되었습니다!`)
-  input.value = ''
-})
+document.getElementById("cta-btn").addEventListener("click", () => {
+  trackEvent("cta_click", { button_location: "cta" });
+  const toast = document.getElementById("toast");
+  toast.classList.add("show");
+  setTimeout(() => toast.classList.remove("show"), 3000);
+});
