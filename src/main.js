@@ -1,4 +1,7 @@
 import "./style.css";
+import { inject } from "@vercel/analytics";
+
+inject();
 
 import scanImg from "../assets/영수증 스캔하기.png";
 import tripImg from "../assets/나의 여행 목록 페이지.png";
