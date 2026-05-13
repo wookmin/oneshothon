@@ -77,92 +77,122 @@ const t = {
 };
 
 function detectLang() {
-  const code = (navigator.language || "ko").toLowerCase();
-  if (code.startsWith("zh")) return "zh";
-  if (code.startsWith("ko")) return "ko";
+  const locales = Array.isArray(navigator.languages) && navigator.languages.length > 0
+    ? navigator.languages
+    : [navigator.language || "ko"];
+
+  for (const locale of locales) {
+    const code = locale.toLowerCase();
+    if (code.startsWith("zh")) return "zh";
+    if (code.startsWith("ko")) return "ko";
+    if (code.startsWith("en")) return "en";
+  }
+
   return "en";
 }
 
-const l = t[detectLang()];
+function renderApp() {
+  const lang = detectLang();
+  const l = t[lang];
 
-document.getElementById("app").innerHTML = `
-  <nav class="nav">
-    <div class="nav-inner">
-      <a href="/" class="logo">oneshot</a>
-      <a href="#pre-register" class="btn-nav">${l.navCta}</a>
-    </div>
-  </nav>
+  document.documentElement.lang = lang;
 
-  <section class="hero">
-    <div class="hero-inner animate-in">
-      <h1>${l.heroTitle}</h1>
-      <p class="hero-sub">${l.heroSub}</p>
-      <a href="#pre-register" class="btn-primary">${l.heroCta}</a>
-    </div>
-  </section>
+  document.getElementById("app").innerHTML = `
+    <nav class="nav">
+      <div class="nav-inner">
+        <a href="/" class="logo">oneshot</a>
+        <a href="#pre-register" class="btn-nav">${l.navCta}</a>
+      </div>
+    </nav>
 
-  <section class="feature feature--alt">
-    <div class="feature-inner animate-in">
-      <div class="phone-wrap">
-        <div class="phone-frame">
-          <img src="${scanImg}" alt="${l.alt1}" />
+    <section class="hero">
+      <div class="hero-inner animate-in">
+        <h1>${l.heroTitle}</h1>
+        <p class="hero-sub">${l.heroSub}</p>
+        <a href="#pre-register" class="btn-primary">${l.heroCta}</a>
+      </div>
+    </section>
+
+    <section class="feature feature--alt">
+      <div class="feature-inner animate-in">
+        <div class="phone-wrap">
+          <div class="phone-frame">
+            <img src="${scanImg}" alt="${l.alt1}" />
+          </div>
+        </div>
+        <div class="feature-text">
+          <span class="feature-tag">${l.feat1Tag}</span>
+          <h2>${l.feat1Title}</h2>
+          <p>${l.feat1Desc}</p>
         </div>
       </div>
-      <div class="feature-text">
-        <span class="feature-tag">${l.feat1Tag}</span>
-        <h2>${l.feat1Title}</h2>
-        <p>${l.feat1Desc}</p>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <section class="feature">
-    <div class="feature-inner feature-inner--reverse animate-in">
-      <div class="phone-wrap">
-        <div class="phone-frame">
-          <img src="${tripImg}" alt="${l.alt2}" />
+    <section class="feature">
+      <div class="feature-inner feature-inner--reverse animate-in">
+        <div class="phone-wrap">
+          <div class="phone-frame">
+            <img src="${tripImg}" alt="${l.alt2}" />
+          </div>
+        </div>
+        <div class="feature-text">
+          <span class="feature-tag">${l.feat2Tag}</span>
+          <h2>${l.feat2Title}</h2>
+          <p>${l.feat2Desc}</p>
         </div>
       </div>
-      <div class="feature-text">
-        <span class="feature-tag">${l.feat2Tag}</span>
-        <h2>${l.feat2Title}</h2>
-        <p>${l.feat2Desc}</p>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <section class="feature feature--alt">
-    <div class="feature-inner animate-in">
-      <div class="phone-wrap">
-        <div class="phone-frame">
-          <img src="${statsImg}" alt="${l.alt3}" />
+    <section class="feature feature--alt">
+      <div class="feature-inner animate-in">
+        <div class="phone-wrap">
+          <div class="phone-frame">
+            <img src="${statsImg}" alt="${l.alt3}" />
+          </div>
+        </div>
+        <div class="feature-text">
+          <span class="feature-tag">${l.feat3Tag}</span>
+          <h2>${l.feat3Title}</h2>
+          <p>${l.feat3Desc}</p>
         </div>
       </div>
-      <div class="feature-text">
-        <span class="feature-tag">${l.feat3Tag}</span>
-        <h2>${l.feat3Title}</h2>
-        <p>${l.feat3Desc}</p>
+    </section>
+
+    <section class="cta-section" id="pre-register">
+      <div class="cta-inner animate-in">
+        <h2>${l.ctaTitle}</h2>
+        <p class="cta-desc">${l.ctaDesc}</p>
+        <button class="btn-cta" id="cta-btn">${l.ctaBtn}</button>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <section class="cta-section" id="pre-register">
-    <div class="cta-inner animate-in">
-      <h2>${l.ctaTitle}</h2>
-      <p class="cta-desc">${l.ctaDesc}</p>
-      <button class="btn-cta" id="cta-btn">${l.ctaBtn}</button>
-    </div>
-  </section>
+    <div class="toast" id="toast">${l.toast}</div>
 
-  <div class="toast" id="toast">${l.toast}</div>
+    <footer class="footer">
+      <div class="footer-inner">
+        <span class="logo">oneshot</span>
+        <p>© 2026 oneshot. All rights reserved.</p>
+      </div>
+    </footer>
+  `;
 
-  <footer class="footer">
-    <div class="footer-inner">
-      <span class="logo">oneshot</span>
-      <p>© 2026 oneshot. All rights reserved.</p>
-    </div>
-  </footer>
-`;
+  document.querySelector(".btn-nav").addEventListener("click", () => {
+    trackEvent("cta_click", { button_location: "nav" });
+  });
+
+  document.querySelector(".btn-primary").addEventListener("click", () => {
+    trackEvent("cta_click", { button_location: "hero" });
+  });
+
+  document.getElementById("cta-btn").addEventListener("click", () => {
+    trackEvent("cta_click", { button_location: "cta" });
+    const toast = document.getElementById("toast");
+    toast.classList.add("show");
+    setTimeout(() => toast.classList.remove("show"), 3000);
+  });
+
+  document.querySelectorAll(".animate-in").forEach((el) => observer.observe(el));
+}
 
 const observer = new IntersectionObserver(
   (entries) => {
@@ -176,25 +206,12 @@ const observer = new IntersectionObserver(
   { threshold: 0.12 },
 );
 
-document.querySelectorAll(".animate-in").forEach((el) => observer.observe(el));
-
 function trackEvent(name, params = {}) {
   if (typeof window.gtag === "function") {
     window.gtag("event", name, params);
   }
 }
 
-document.querySelector(".btn-nav").addEventListener("click", () => {
-  trackEvent("cta_click", { button_location: "nav" });
-});
+renderApp();
 
-document.querySelector(".btn-primary").addEventListener("click", () => {
-  trackEvent("cta_click", { button_location: "hero" });
-});
-
-document.getElementById("cta-btn").addEventListener("click", () => {
-  trackEvent("cta_click", { button_location: "cta" });
-  const toast = document.getElementById("toast");
-  toast.classList.add("show");
-  setTimeout(() => toast.classList.remove("show"), 3000);
-});
+window.addEventListener("languagechange", renderApp);
