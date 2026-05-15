@@ -3,11 +3,11 @@ import { inject } from "@vercel/analytics";
 
 inject();
 
-import cardImg from "../assets/design/트래블 카드 내역 페이지.png";
-import patternImg from "../assets/design/소비패턴 분석.png";
-import recommendImg from "../assets/design/맞춤 여행 추천.png";
-import scanImg from "../assets/design/영수증 스캔.png";
-import budgetImg from "../assets/design/여행별 예산 관리.png";
+import cardImg from "../assets/design/travel-card-history.png";
+import patternImg from "../assets/design/spending-pattern-analysis.png";
+import recommendImg from "../assets/design/personalized-travel-recommendation.png";
+import scanImg from "../assets/design/receipt-scan.png";
+import budgetImg from "../assets/design/trip-budget-management.png";
 
 const t = {
   ko: {
